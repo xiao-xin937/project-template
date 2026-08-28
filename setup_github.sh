@@ -30,8 +30,7 @@ echo "     完成"
 
 # ---------- 2. 安全扫描 ----------
 echo "[2/4] 开启密钥扫描与推送保护"
-gh api -X PATCH "repos/$REPO" \
-  --input - --silent <<'JSON' || echo "     跳过（私有仓库需 GitHub Advanced Security，或该功能不可用）"
+if gh api -X PATCH "repos/$REPO" --input - --silent 2>/dev/null <<'JSON'
 {
   "security_and_analysis": {
     "secret_scanning": { "status": "enabled" },
@@ -39,14 +38,41 @@ gh api -X PATCH "repos/$REPO" \
   }
 }
 JSON
-echo "     完成"
+then
+  echo "     完成"
+else
+  echo "     跳过：该仓库不支持密钥扫描"
+  echo "     （GitHub Free 的私有仓库不提供此功能；公开仓库免费，私有仓库需 GHAS）"
+  echo "     替代方案：.pre-commit-config.yaml 里的 gitleaks 钩子在本地拦截，已配置"
+fi
 
 # ---------- 3. main 分支保护 ruleset ----------
 echo "[3/4] 配置 main 分支保护规则"
 
+# 前置检查：GitHub Free 的私有仓库不支持分支保护/rulesets，
+# 直接调用会返回 403 且错误 JSON 会被误当成 ruleset id，所以先探测能力。
+PROBE=$(gh api "repos/$REPO/rulesets" 2>&1) || PROBE_FAILED=1
+if [ "${PROBE_FAILED:-0}" = "1" ]; then
+  if echo "$PROBE" | grep -q "Upgrade to GitHub Pro"; then
+    echo "     无法配置：GitHub Free 的私有仓库不支持分支保护"
+    echo
+    echo "     三条出路："
+    echo "       1) 把仓库改为公开：gh repo edit $REPO --visibility public --accept-visibility-change-consequences"
+    echo "          分支保护立即可用且免费。仅适用于不含敏感信息的仓库。"
+    echo "       2) 升级 GitHub Pro（约 \$4/月），保持私有 + 完整分支保护。"
+    echo "       3) 暂不配置服务端保护，依靠本地 pre-commit 钩子 + 团队约定。"
+    echo "          注意：这只是软约束，任何人都能直接推 main。"
+    echo
+    echo "     其余配置（合并策略等）已生效。选定方案后重跑本脚本即可。"
+    exit 2
+  fi
+  echo "     查询 rulesets 失败：$PROBE"
+  exit 1
+fi
+
 # 已存在同名 ruleset 则先删除，保证幂等
-EXISTING=$(gh api "repos/$REPO/rulesets" -q '.[] | select(.name=="main-protection") | .id' 2>/dev/null || true)
-if [ -n "$EXISTING" ]; then
+EXISTING=$(printf '%s' "$PROBE" | jq -r '.[] | select(.name=="main-protection") | .id' 2>/dev/null || true)
+if [ -n "$EXISTING" ] && [ "$EXISTING" != "null" ]; then
   echo "     发现已有规则集（id=$EXISTING），先删除"
   gh api -X DELETE "repos/$REPO/rulesets/$EXISTING" --silent
 fi
