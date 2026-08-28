@@ -131,9 +131,17 @@ gh api -X PATCH "repos/$REPO" \
 echo "     完成"
 
 echo
-echo "全部配置完成。验证："
-echo "  gh api repos/$REPO/rulesets -q '.[].name'"
+echo "全部配置完成。"
 echo
-echo "还需手动做的两件事（GitHub 网页端）："
-echo "  1. Settings → Collaborators and teams 添加成员，给 Write 权限"
-echo "  2. 替换 .github/CODEOWNERS 里的 @OWNER_PLACEHOLDER 为真实账号"
+echo "验证配置是否真正生效（强烈建议执行，配完不验证等于没配）："
+echo "  gh api repos/$REPO/rulesets -q '.[] | .name + \" | \" + .enforcement'"
+echo "  git push origin main    # 应被拒绝：Changes must be made through a pull request"
+echo
+echo "如果 CODEOWNERS 里还有 @OWNER_PLACEHOLDER，替换为真实账号："
+echo "  sed -i \"s/@OWNER_PLACEHOLDER/@你的账号/g\" .github/CODEOWNERS"
+echo
+echo "邀请协作者（给 Write 权限，不要给 Admin）："
+echo "  gh api -X PUT repos/$REPO/collaborators/<用户名> -f permission=push"
+echo
+echo "注意：要求 $APPROVALS 人审核且不能自我审核，意味着单人无法合并任何 PR。"
+echo "团队成员到位前想自己走通流程，改用：bash setup_github.sh 0"
