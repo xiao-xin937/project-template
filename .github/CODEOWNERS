@@ -6,20 +6,20 @@
 # 或组织团队（@org/team-name）。团队方式更好维护，人员变动时不用改这个文件。
 
 # 默认：所有文件
-*                       @OWNER_PLACEHOLDER
+*                       @xiao-xin937
 
 # 后端代码
-/src/                   @OWNER_PLACEHOLDER
-/tests/                 @OWNER_PLACEHOLDER
+/src/                   @xiao-xin937
+/tests/                 @xiao-xin937
 
 # CI/CD 与仓库配置 —— 建议收紧到 1-2 人，这类改动风险最高
-/.github/               @OWNER_PLACEHOLDER
-/.pre-commit-config.yaml @OWNER_PLACEHOLDER
-/pyproject.toml         @OWNER_PLACEHOLDER
+/.github/               @xiao-xin937
+/.pre-commit-config.yaml @xiao-xin937
+/pyproject.toml         @xiao-xin937
 
 # 依赖清单变更需要留意供应链风险
-requirements*.txt       @OWNER_PLACEHOLDER
+requirements*.txt       @xiao-xin937
 
 # 数据库迁移与 SQL
-*.sql                   @OWNER_PLACEHOLDER
-/migrations/            @OWNER_PLACEHOLDER
+*.sql                   @xiao-xin937
+/migrations/            @xiao-xin937
