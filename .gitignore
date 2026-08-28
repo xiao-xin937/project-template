@@ -1,0 +1,98 @@
+# ---- 敏感文件（务必保持在最前，优先级最高）----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+secrets.*
+credentials.*
+config.local.*
+*_secret*
+*_token*
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+
+# 测试与覆盖率
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# 类型检查与 lint 缓存
+.mypy_cache/
+.dmypy.json
+.ruff_cache/
+.pytype/
+
+# ---- 数据库与数据文件 ----
+*.db
+*.sqlite
+*.sqlite3
+data/
+*.dump
+
+# ---- 日志 ----
+*.log
+logs/
+
+# ---- 编辑器与 IDE ----
+.vscode/*
+!.vscode/settings.json.example
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# ---- 操作系统 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ---- 前端（如项目含前端）----
+node_modules/
+.next/
+.nuxt/
+.cache/
+*.tsbuildinfo
+
+# ---- 临时与产物 ----
+tmp/
+temp/
+*.tmp
+*.bak
+*.orig

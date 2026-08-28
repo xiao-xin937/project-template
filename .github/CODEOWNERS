@@ -1,0 +1,25 @@
+# CODEOWNERS — 指定各路径的默认审核人
+# 语法与 .gitignore 类似，后匹配的规则覆盖前面的规则。
+# 开启分支保护里的 "Require review from Code Owners" 后，这里列出的人会被自动请求审核。
+#
+# 使用前请把下面的占位账号替换成真实的 GitHub 用户名（@username）
+# 或组织团队（@org/team-name）。团队方式更好维护，人员变动时不用改这个文件。
+
+# 默认：所有文件
+*                       @OWNER_PLACEHOLDER
+
+# 后端代码
+/src/                   @OWNER_PLACEHOLDER
+/tests/                 @OWNER_PLACEHOLDER
+
+# CI/CD 与仓库配置 —— 建议收紧到 1-2 人，这类改动风险最高
+/.github/               @OWNER_PLACEHOLDER
+/.pre-commit-config.yaml @OWNER_PLACEHOLDER
+/pyproject.toml         @OWNER_PLACEHOLDER
+
+# 依赖清单变更需要留意供应链风险
+requirements*.txt       @OWNER_PLACEHOLDER
+
+# 数据库迁移与 SQL
+*.sql                   @OWNER_PLACEHOLDER
+/migrations/            @OWNER_PLACEHOLDER

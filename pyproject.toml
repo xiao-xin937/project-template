@@ -1,0 +1,57 @@
+[project]
+name = "project-template"
+version = "0.1.0"
+description = "团队协作模板项目"
+requires-python = ">=3.11"
+dependencies = []
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = [".venv", "build", "dist", "migrations"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle 错误
+    "W",    # pycodestyle 警告
+    "F",    # pyflakes
+    "I",    # isort，import 排序
+    "B",    # flake8-bugbear，常见 bug 模式
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade，用新语法
+    "S",    # flake8-bandit，安全检查
+    "RUF",  # ruff 自有规则
+]
+ignore = [
+    "E501",   # 行长交给 formatter 管
+    "RUF001", # 中文全角标点会被误报为易混淆字符
+    "RUF002",
+    "RUF003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+# 测试里允许 assert 和硬编码测试用密码
+"tests/**" = ["S101", "S105", "S106"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: 耗时较长的测试，可用 -m 'not slow' 跳过",
+    "integration: 需要外部依赖的集成测试",
+]
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
