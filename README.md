@@ -69,3 +69,5 @@ git tag -a v1.0.0 -m "v1.0.0"
 git push origin v1.0.0
 gh release create v1.0.0 --generate-notes
 ```
+
+<!-- 分支保护验证，合并后可删除此行 -->
